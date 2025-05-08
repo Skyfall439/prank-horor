@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>☠️ Anda Dalam Bahaya</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #00FF00;
+      font-family: 'Share Tech Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      text-align: center;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+      animation: flicker 1.5s infinite alternate;
+    }
+
+    p {
+      font-size: 1.5em;
+      max-width: 80%;
+    }
+
+    .alert-box {
+      border: 2px solid red;
+      background: #330000;
+      padding: 20px;
+      margin-top: 30px;
+      color: #FF3333;
+      display: none;
+      animation: shake 0.4s infinite;
+    }
+
+    .jump-scare {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .jump-scare img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      animation: zoom 0.5s ease-in-out;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(-5px); }
+      25% { transform: translateX(5px); }
+      50% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes zoom {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.2); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+
+  <h1>⚠️ Sistem Anda Terinfeksi</h1>
+  <p>Press something... dan lihat apa yang terjadi 👀</p>
+  <div class="alert-box" id="alertBox">🔥 Serangan Terdeteksi! Menjalankan Protokol 666...</div>
+
+  <div class="jump-scare" id="jumpScare">
+    <img src="jumpscare.jpg" alt="Scary face">
+  </div>
+
+  <script>
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const katakana = "アカサタナハマヤラワンガザダバパ";
+    const letters = katakana.split("");
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#0F0";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height || Math.random() > 0.95) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawMatrix, 35);
+
+    const alertBox = document.getElementById("alertBox");
+    const jumpScare = document.getElementById("jumpScare");
+    const laugh = new Audio("evil-laugh.mp3");
+    const scream = new Audio("scream.mp3");
+
+    let triggered = false;
+
+    document.addEventListener("keydown", () => {
+      if (!triggered) {
+        alertBox.style.display = "block";
+        laugh.play();
+        triggered = true;
+
+        setTimeout(() => {
+          jumpScare.style.display = "flex";
+          scream.play();
+
+          setTimeout(() => {
+            jumpScare.style.display = "none";
+          }, 3000);
+        }, 2000);
+      } else {
+        alertBox.innerText = "⚠️ Sistem Gagal. Jiwa Anda Telah Diserap. 👹";
+      }
+    });
+  </script>
+</body>
+</html>
