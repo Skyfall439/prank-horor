@@ -1,64 +1,31 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>☠️ Anda Dalam Bahaya</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🔥 Arsenal Gagal Lagi! 🔥</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
     body {
       margin: 0;
-      background-color: #000;
-      color: #00FF00;
-      font-family: 'Share Tech Mono', monospace;
+      background-color: #111;
+      color: #fff;
+      font-family: 'Press Start 2P', cursive;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      overflow: hidden;
       text-align: center;
-      position: relative;
+      overflow: hidden;
     }
 
     h1 {
-      font-size: 3em;
-      margin-bottom: 20px;
+      font-size: 2em;
+      color: #ff4444;
+      text-shadow: 2px 2px 8px rgba(255, 0, 0, 0.7);
+      margin: 20px 0;
       animation: flicker 1.5s infinite alternate;
-    }
-
-    p {
-      font-size: 1.5em;
-      max-width: 80%;
-    }
-
-    .alert-box {
-      border: 2px solid red;
-      background: #330000;
-      padding: 20px;
-      margin-top: 30px;
-      color: #FF3333;
-      display: none;
-      animation: shake 0.4s infinite;
-    }
-
-    .jump-scare {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 100;
-      width: 100vw;
-      height: 100vh;
-      background: black;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .jump-scare img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      animation: zoom 0.5s ease-in-out;
     }
 
     @keyframes flicker {
@@ -67,17 +34,37 @@
       100% { opacity: 1; }
     }
 
-    @keyframes shake {
-      0% { transform: translateX(-5px); }
-      25% { transform: translateX(5px); }
-      50% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
-      100% { transform: translateX(0); }
+    p {
+      font-size: 1em;
+      color: #ffbb33;
+      margin: 10px;
+      max-width: 80%;
+      animation: bounce 2s ease-in-out infinite;
     }
 
-    @keyframes zoom {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.2); }
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
+    }
+
+    .alert-box {
+      display: none;
+      background-color: #ff6666;
+      border: 3px solid #ff3333;
+      padding: 20px;
+      color: #fff;
+      font-size: 1em;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+      margin-top: 30px;
+      animation: shake 0.4s infinite alternate;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      100% { transform: translateX(0); }
     }
 
     canvas {
@@ -87,74 +74,104 @@
       z-index: -1;
       display: block;
     }
+
+    button {
+      padding: 10px 20px;
+      background-color: #ff4444;
+      color: #fff;
+      border: none;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 8px;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff2222;
+      transform: scale(1.1);
+    }
+
+    #odiImage {
+      display: none;
+      width: 200px;
+      margin-top: 20px;
+      border: 5px solid #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px red;
+      animation: muncul 0.5s ease-in-out;
+    }
+
+    @keyframes muncul {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 1; transform: scale(1); }
+    }
   </style>
 </head>
 <body>
   <canvas id="matrixCanvas"></canvas>
 
-  <h1>⚠️ Sistem Anda Terinfeksi</h1>
-  <p>Press something... dan lihat apa yang terjadi 👀</p>
-  <div class="alert-box" id="alertBox">🔥 Serangan Terdeteksi! Menjalankan Protokol 666...</div>
+  <h1>⚽ Arsenal Gagal Lagi? ⚽</h1>
+  <p>Selalu dekat juara, tapi selalu gagal juga... 😂</p>
 
-  <div class="jump-scare" id="jumpScare">
-    <img src="jumpscare.jpg" alt="Scary face">
+  <div class="alert-box" id="alertBox">
+    🔥 Arsenal Kembali Kalah! Fans-nya Sabar Ya 🫢
   </div>
 
+  <button onclick="triggerAlert()">Klik untuk Melihat ODI Botak</button>
+
+  <!-- Tambahan: Gambar & Audio -->
+  <img id="odiImage" src="odi-botak.png" alt="Odi Botak" />
+  <audio id="laughAudio" src="ketawa.mp3"></audio>
+
   <script>
+    // Matrix background effect
     const canvas = document.getElementById("matrixCanvas");
     const ctx = canvas.getContext("2d");
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
 
-    const katakana = "アカサタナハマヤラワンガザダバパ";
-    const letters = katakana.split("");
+    const letters = "BOTAK".split("");
     const fontSize = 14;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops = new Array(columns).fill(1);
 
     function drawMatrix() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       ctx.fillStyle = "#0F0";
-      ctx.font = fontSize + "px monospace";
+      ctx.font = `${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
         const text = letters[Math.floor(Math.random() * letters.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
         if (drops[i] * fontSize > canvas.height || Math.random() > 0.95) {
           drops[i] = 0;
         }
+
         drops[i]++;
       }
     }
 
-    setInterval(drawMatrix, 35);
+    setInterval(drawMatrix, 33);
 
-    const alertBox = document.getElementById("alertBox");
-    const jumpScare = document.getElementById("jumpScare");
-    const laugh = new Audio("evil-laugh.mp3");
-    const scream = new Audio("scream.mp3");
+    // Tombol ditekan
+    function triggerAlert() {
+      const alertBox = document.getElementById("alertBox");
+      const odiImage = document.getElementById("odiImage");
+      const laughAudio = document.getElementById("laughAudio");
 
-    let triggered = false;
+      alertBox.style.display = "block";
+      odiImage.style.display = "block";
+      laughAudio.play();
 
-    document.addEventListener("keydown", () => {
-      if (!triggered) {
-        alertBox.style.display = "block";
-        laugh.play();
-        triggered = true;
-
-        setTimeout(() => {
-          jumpScare.style.display = "flex";
-          scream.play();
-
-          setTimeout(() => {
-            jumpScare.style.display = "none";
-          }, 3000);
-        }, 2000);
-      } else {
-        alertBox.innerText = "⚠️ Sistem Gagal. Jiwa Anda Telah Diserap. 👹";
-      }
-    });
+      setTimeout(() => {
+        alertBox.style.display = "none";
+        odiImage.style.display = "none";
+      }, 5000);
+    }
   </script>
 </body>
 </html>
